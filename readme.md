@@ -14,3 +14,8 @@ $ npm i && npm run build
 ```
 
 2. Check the `dist` folder.
+
+## UPD
+
+Some answers provided in this issue:
+https://github.com/webpack-contrib/mini-css-extract-plugin/issues/804

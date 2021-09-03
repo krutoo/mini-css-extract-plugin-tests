@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { render } from 'react-dom';
-import styles from './mobile.module.css';
+import styles from './desktop.module.css';
 
 const Remote = lazy(() => import('./common'));
 

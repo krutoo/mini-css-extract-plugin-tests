@@ -1,22 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
-function recursiveIssuer(m, c) {
-  const issuer = c.moduleGraph.getIssuer(m);
-
-  if (issuer) {
-    return recursiveIssuer(issuer, c);
-  }
-
-  const chunks = c.chunkGraph.getModuleChunks(m);
-
-  for (const chunk of chunks) {
-    return chunk.name;
-  }
-
-  return false;
-}
-
 module.exports = {
   mode: 'development',
   entry: {
@@ -24,6 +8,7 @@ module.exports = {
     desktop: './src/desktop.jsx',
   },
   output: {
+    clean: true,
     filename: '[name]/index.js',
     path: path.resolve(__dirname, 'dist'),
   },
@@ -32,7 +17,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: '[name]/index.css',
     }),
   ],
   module: {
@@ -62,19 +47,15 @@ module.exports = {
     splitChunks: {
       cacheGroups: {
         desktopStyles: {
-          name: 'styles_desktop',
-          test: (m, c, entry = 'desktop') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
+          type: 'css/mini-extract',
+          name: 'desktop',
+          chunks: chunk => chunk.name === 'desktop',
           enforce: true,
         },
         mobileStyles: {
-          name: 'styles_mobile',
-          test: (m, c, entry = 'mobile') =>
-            m.constructor.name === 'CssModule' &&
-            recursiveIssuer(m, c) === entry,
-          chunks: 'all',
+          type: 'css/mini-extract',
+          name: 'mobile',
+          chunks: chunk => chunk.name === 'mobile',
           enforce: true,
         },
       },
